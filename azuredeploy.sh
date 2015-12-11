@@ -43,13 +43,16 @@ is_master()
 #
 install_pkgs()
 {
-    pkgs="libbz2-1 libz1 openssl libopenssl-devel gcc gcc-c++ nfs-client rpcbind"
-
-    if is_master; then
-        pkgs="$pkgs nfs-kernel-server"
-    fi
+    pkgs="libbz2-1 libz1 openssl libopenssl-devel gcc gcc-c++ nfs-client rpcbind nfs-utils nfs-utils-lib"
 
     yum -y install $pkgs
+    
+    if is_master; then
+        systemctl enable rpcbind
+        systemctl enable nfs-server
+        systemctl start rpcbind
+        systemctl start nfs-server
+    fi
 }
 
 # Partitions all data disks attached to the VM and creates
