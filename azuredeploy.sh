@@ -121,7 +121,9 @@ setup_hpc_user()
 {
     if is_master; then
         useradd -c "HPC User" -g $HPC_GROUP -d $SHARE_HOME/$HPC_USER -s /bin/bash -m -u $HPC_UID $HPC_USER
-
+        cd /share/home/
+        echo ls -la
+        
         # Configure public key auth for the HPC user
         sudo -u $HPC_USER ssh-keygen -t rsa -f $SHARE_HOME/$HPC_USER/.ssh/id_rsa -q -P ""
         cat $SHARE_HOME/$HPC_USER/.ssh/id_rsa.pub > $SHARE_HOME/$HPC_USER/.ssh/authorized_keys
