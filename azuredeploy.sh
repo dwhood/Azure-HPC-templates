@@ -125,7 +125,7 @@ setup_hpc_user()
         echo ls -la
         
         # Configure public key auth for the HPC user
-        sudo -u $HPC_USER ssh-keygen -t rsa -f $SHARE_HOME/.ssh/id_rsa -q -P ""
+        su -u $HPC_USER ssh-keygen -t rsa -f $SHARE_HOME/.ssh/id_rsa -q -P ""
         cat $SHARE_HOME/.ssh/id_rsa.pub > $SHARE_HOME/.ssh/authorized_keys
 
         echo "Host *" > $SHARE_HOME/.ssh/config
