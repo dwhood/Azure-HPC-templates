@@ -46,13 +46,6 @@ install_pkgs()
     pkgs="libbz2-1 libz1 openssl libopenssl-devel gcc gcc-c++ nfs-client rpcbind nfs-utils nfs-utils-lib"
 
     yum -y install $pkgs
-    
-    if is_master; then
-        systemctl enable rpcbind
-        systemctl enable nfs-server
-        systemctl start rpcbind
-        systemctl start nfs-server
-    fi
 }
 
 # Partitions all data disks attached to the VM and creates
@@ -105,7 +98,12 @@ setup_shares()
 	    setup_data_disks $SHARE_DATA
         echo "$SHARE_HOME    *(rw,async)" >> /etc/exports
         echo "$SHARE_DATA    *(rw,async)" >> /etc/exports
-        service nfsserver status && service nfsserver reload || service nfsserver start
+
+        systemctl enable rpcbind
+        systemctl enable nfs-server
+        systemctl start rpcbind
+        systemctl start nfs-server
+   
     else
         echo "master:$SHARE_HOME $SHARE_HOME    nfs4    rw,auto,_netdev 0 0" >> /etc/fstab
         echo "master:$SHARE_DATA $SHARE_DATA    nfs4    rw,auto,_netdev 0 0" >> /etc/fstab
