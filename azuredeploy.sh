@@ -117,32 +117,32 @@ setup_shares()
 # The HPC user has a shared home directory (NFS share on master) and access
 # to the data share.
 #
-setup_hpc_user()
-{
-    if is_master; then
-        useradd -c "HPC User" -g $HPC_GROUP -d $SHARE_HOME -s /bin/bash -m -u $HPC_UID $HPC_USER
-        cd /share/home/
-        echo ls -la
+# setup_hpc_user()
+# {
+#     if is_master; then
+#         useradd -c "HPC User" -g $HPC_GROUP -d $SHARE_HOME/$HPC_USER -s /bin/bash -m -u $HPC_UID $HPC_USER
+#         cd /share/home/
+#         echo ls -la
         
-        # Configure public key auth for the HPC user
-        su -u $HPC_USER ssh-keygen -t rsa -f $SHARE_HOME/.ssh/id_rsa -q -P ""
-        cat $SHARE_HOME/.ssh/id_rsa.pub > $SHARE_HOME/.ssh/authorized_keys
+#         # Configure public key auth for the HPC user
+#         sudo -u $HPC_USER ssh-keygen -t rsa -f $SHARE_HOME/$HPC_USER/.ssh/id_rsa -q -P ""
+#         cat $SHARE_HOME/$HPC_USER/.ssh/id_rsa.pub > $SHARE_HOME/$HPC_USER/.ssh/authorized_keys
 
-        echo "Host *" > $SHARE_HOME/.ssh/config
-        echo "    StrictHostKeyChecking no" >> $SHARE_HOME/.ssh/config
-        echo "    UserKnownHostsFile /dev/null" >> $SHARE_HOME/.ssh/config
-		echo "    PasswordAuthentication no" >> $SHARE_HOME/.ssh/config
+#         echo "Host *" > $SHARE_HOME/$HPC_USER/.ssh/config
+#         echo "    StrictHostKeyChecking no" >> $SHARE_HOME/$HPC_USER/.ssh/config
+#         echo "    UserKnownHostsFile /dev/null" >> $SHARE_HOME/$HPC_USER/.ssh/config
+# 		echo "    PasswordAuthentication no" >> $SHARE_HOME/$HPC_USER/.ssh/config
 
-        chown $HPC_USER:$HPC_GROUP $SHARE_HOME/.ssh/authorized_keys
-        chown $HPC_USER:$HPC_GROUP $SHARE_HOME/.ssh/config
-        chown $HPC_USER:$HPC_GROUP $SHARE_DATA
-    else
-        useradd -c "HPC User" -g $HPC_GROUP -d $SHARE_HOME/ -s /bin/bash -u $HPC_UID $HPC_USER
-    fi
+#         chown $HPC_USER:$HPC_GROUP $SHARE_HOME/$HPC_USER/.ssh/authorized_keys
+#         chown $HPC_USER:$HPC_GROUP $SHARE_HOME/$HPC_USER/.ssh/config
+#         chown $HPC_USER:$HPC_GROUP $SHARE_DATA
+#     else
+#         useradd -c "HPC User" -g $HPC_GROUP -d $SHARE_HOME/$HPC_USER -s /bin/bash -u $HPC_UID $HPC_USER
+#     fi
 
-    # Don't require password for HPC user sudo
-    echo "$HPC_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-}
+#     # Don't require password for HPC user sudo
+#     echo "$HPC_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+# }
 
 # Sets all common environment variables and system parameters.
 #
@@ -161,7 +161,7 @@ setup_env()
 
 install_pkgs
 setup_shares
-setup_hpc_user
+#setup_hpc_user
 setup_env
 
 yum -y install nmap
